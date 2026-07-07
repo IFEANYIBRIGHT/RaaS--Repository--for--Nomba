@@ -2,6 +2,7 @@ services:
   - type: web
     name: landlord-service
     runtime: python
+    plan: free
     rootDir: nomba/landLordService
     buildCommand: pip install -r app/requirements.txt
     startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/landLordService uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -14,6 +15,7 @@ services:
   - type: web
     name: tenant-service
     runtime: python
+    plan: free
     rootDir: nomba/tenantServices
     buildCommand: pip install -r app/requirements.txt
     startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/tenantServices uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -26,6 +28,7 @@ services:
   - type: web
     name: caretaker-service
     runtime: python
+    plan: free
     rootDir: nomba/careTakerServices
     buildCommand: pip install -r app/requirements.txt
     startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/careTakerServices uvicorn app.main:app --host 0.0.0.0 --port $PORT
