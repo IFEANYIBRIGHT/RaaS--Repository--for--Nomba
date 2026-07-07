@@ -15,12 +15,20 @@ class PaymentService:
         self.tenants_repo = tenants_repo
 
     async def handle_webhook_event(self, payload: dict) -> None:
+        event_type = payload.get("event_type")
+        if event_type != "payment_success":
+            return  # ignore payment_failed, payout_success, etc. for now
+
         data = payload.get("data", {})
-        reference = data.get("reference")
-        amount = data.get("amount")
+        transaction = data.get("transaction", {})
+
+        reference = transaction.get("merchantTxRef") or transaction.get("transactionId")
+        amount = transaction.get("transactionAmount")
+        alias_account = transaction.get("aliasAccountNumber")
 
         await self.payment_repo.create_payment({
             "reference": reference,
             "amount": amount,
+            "alias_account_number": alias_account,
             "status": "successful",
         })
