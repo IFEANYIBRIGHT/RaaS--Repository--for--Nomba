@@ -21,3 +21,9 @@ class TenantsRepo:
             {"$set": {"password": hashed_password}},
         )
         return result.matched_count > 0
+    async def update_tenant(self, tenant_id: str, update_data: dict) -> bool:
+        result = await self.collection.update_one(
+            {"_id": ObjectId(tenant_id)},
+            {"$set": update_data},
+        )
+        return result.matched_count > 0

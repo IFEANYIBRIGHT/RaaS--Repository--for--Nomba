@@ -1,17 +1,18 @@
 from datetime import datetime
-
+from nomba.landLordService.app.schemas.property_update_request import PropertyUpdateRequest
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.dependencies import get_land_lord_service
-from app.services.land_lord_services import LandLordService
-from app.models.land_lord import LandLord
-from app.schemas.land_lord_request import LandLordRequest
+from nomba.landLordService.app.dependencies import get_land_lord_service
+from nomba.landLordService.app.services.land_lord_services import LandLordService
+from nomba.landLordService.app.models.land_lord import LandLord
+from nomba.landLordService.app.schemas.land_lord_request import LandLordRequest
 from nomba.tenantServices.app.models.tenants import Tenants
 from nomba.careTakerServices.app.models.care_taker import CareTaker
-from app.schemas.tenants_requests import TenantsRequests
-from app.schemas.care_takers_requests import CareTakersRequests
-from app.schemas.login_request import LoginRequest
-from app.schemas.virtual_account_request import VirtualAccountRequest
+from nomba.landLordService.app.schemas.tenants_requests import TenantsRequests
+from nomba.landLordService.app.schemas.care_takers_requests import CareTakersRequests
+from nomba.landLordService.app.schemas.login_request import LoginRequest
+from nomba.landLordService.app.schemas.virtual_account_request import VirtualAccountRequest
+from nomba.landLordService.app.schemas.tenant_update_request import TenantUpdateRequest
 
 router = APIRouter(prefix="/landlord", tags=["landlord"])
 
@@ -21,7 +22,7 @@ async def set_virtual_account_number(
     request: VirtualAccountRequest,
     service: LandLordService = Depends(get_land_lord_service),
 ):
-    updated = await service.set_virtual_account_number(request.identifier, request.virtual_account_number)
+    updated = await service.set_virtual_account_number(request.identifier, request.virtual_account_number, request.bank_name, request.account_name)
     if not updated:
         raise HTTPException(status_code=404, detail="Landlord not found")
     return {"message": "Virtual account number saved successfully"}
@@ -34,7 +35,7 @@ async def get_virtual_account_number(
     number = await service.get_virtual_account_number(identifier)
     if number is None:
         raise HTTPException(status_code=404, detail="Virtual account number not found")
-    return {"virtual_account_number": number}
+    return number
 
 
 @router.post("/register")
@@ -121,6 +122,19 @@ async def delete_tenant(
     return await service.delete_a_tenant(tenant_id)
 
 
+@router.patch("/tenants/{tenant_id}")
+async def update_tenant(
+    tenant_id: str,
+    request: TenantUpdateRequest,
+    service: LandLordService = Depends(get_land_lord_service),
+):
+    update_data = {k: v for k, v in request.model_dump().items() if v is not None}
+    updated = await service.update_a_tenant(tenant_id, update_data)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    return {"message": "Tenant updated successfully"}
+
+
 @router.post("/caretakers")
 async def add_caretaker(
     request: CareTakersRequests,
@@ -136,3 +150,11 @@ async def add_caretaker(
         date=datetime.now(),
     )
     return await service.add_a_caretaker(care_taker)
+
+@router.patch("/property/{land_lord_id}")
+async def update_property(
+    land_lord_id: str,
+    request: PropertyUpdateRequest,
+    service: LandLordService = Depends(get_land_lord_service),
+):
+    return await service.update_property(land_lord_id, request.model_dump())

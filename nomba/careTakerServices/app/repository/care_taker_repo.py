@@ -3,7 +3,6 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from nomba.careTakerServices.app.models.care_taker import CareTaker
 
-
 class CareTakerRepo:
     def __init__(self, collection: AsyncIOMotorCollection):
         self.collection = collection

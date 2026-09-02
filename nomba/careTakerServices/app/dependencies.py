@@ -1,11 +1,10 @@
+from nomba.careTakerServices.app.repository.care_taker_repo import CareTakerRepo
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
-from nomba.careTakerServices.app.database import get_database
-from nomba.careTakerServices.app.repository.care_taker_repo import CareTakerRepo
+from nomba.database import get_database
 from nomba.careTakerServices.app.services.care_taker_services import CareTakerService
 from nomba.careTakerServices.app.repository.maintenance_request_repo import MaintenanceRequestRepo
 from nomba.careTakerServices.app.services.maintenance_request_service import MaintenanceRequestService
-
 
 def get_care_takers_collection() -> AsyncIOMotorCollection:
     return get_database()["care_takers"]

@@ -1,41 +1,15 @@
 services:
   - type: web
-    name: landlord-service
+    name: rentflow-api
     runtime: python
     plan: free
-    rootDir: nomba/landLordService
-    buildCommand: pip install -r app/requirements.txt
-    startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/landLordService uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: .
+    buildCommand: pip install -r nomba/requirements.txt
+    startCommand: uvicorn nomba.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: MONGO_URI
         sync: false
       - key: DB_NAME
         sync: false
       - key: NOMBA_PRIVATE_KEY
-        sync: false
-
-  - type: web
-    name: tenant-service
-    runtime: python
-    plan: free
-    rootDir: nomba/tenantServices
-    buildCommand: pip install -r app/requirements.txt
-    startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/tenantServices uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: MONGO_URI
-        sync: false
-      - key: DB_NAME
-        sync: false
-
-  - type: web
-    name: caretaker-service
-    runtime: python
-    plan: free
-    rootDir: nomba/careTakerServices
-    buildCommand: pip install -r app/requirements.txt
-    startCommand: PYTHONPATH=/opt/render/project/src:/opt/render/project/src/nomba/careTakerServices uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: MONGO_URI
-        sync: false
-      - key: DB_NAME
         sync: false

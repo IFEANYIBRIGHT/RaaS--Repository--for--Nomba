@@ -1,6 +1,6 @@
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
-from nomba.tenantServices.app.database import get_database
+from nomba.database import get_database
 from nomba.tenantServices.app.repository.tenants_repo import TenantsRepo
 from nomba.tenantServices.app.services.tenants_services import TenantsService
 
