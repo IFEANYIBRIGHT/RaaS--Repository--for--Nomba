@@ -16,6 +16,11 @@ from app.schemas.virtual_account_request import VirtualAccountRequest
 router = APIRouter(prefix="/landlord", tags=["landlord"])
 
 
+@router.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 @router.post("/virtual-account")
 async def set_virtual_account_number(
     request: VirtualAccountRequest,
