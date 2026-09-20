@@ -34,10 +34,15 @@ app.add_middleware(
         "http://localhost:5176",
         "https://rentflow-frontend-five.vercel.app",
     ],
+    allow_origin_regex=r"https://rentflow-frontend.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.exception_handler(CareTakerNotFoundError)
 async def care_taker_not_found_handler(request: Request, exc: CareTakerNotFoundError):
@@ -51,3 +56,4 @@ app.include_router(care_taker_router.router)
 app.include_router(maintenance_request_router.router)
 app.include_router(tenants_router.router)
 app.include_router(land_lord_router.router)
+app.include_router(payment.router)
