@@ -43,10 +43,13 @@ async def get_landlord_virtual_account(
 ):
     land_lord = await land_lords_collection.find_one(
         {"$or": [{"email": landlord_identifier}, {"phone_number": landlord_identifier}]},
-        {"virtual_account_number": 1},
+        {"virtual_account_number": 1, "bank_name": 1, "account_name": 1},
     )
-    account_number = land_lord.get("virtual_account_number") if land_lord else None
-    return {"virtual_account_number": account_number}
+    return {
+        "virtual_account_number": land_lord.get("virtual_account_number") if land_lord else None,
+        "bank_name": land_lord.get("bank_name") if land_lord else None,
+        "account_name": land_lord.get("account_name") if land_lord else None,
+    }
 
 
 @router.get("/{tenant_id}", response_model=TenantResponse)

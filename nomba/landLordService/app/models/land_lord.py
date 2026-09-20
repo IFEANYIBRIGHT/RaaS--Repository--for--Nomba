@@ -1,4 +1,4 @@
-from app.enums.landUseType import LandUseType
+from nomba.landLordService.app.enums.landUseType import LandUseType
 
 
 class LandLord:

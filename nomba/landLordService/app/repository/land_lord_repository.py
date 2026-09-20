@@ -27,6 +27,13 @@ class LandLordRepository:
     async def get_land_lord(self):
         return await self.collection.find()
 
+    async def update_land_lord_property(self, land_lord_id: str, updates: dict):
+        result = await self.collection.update_one(
+            {"_id": ObjectId(land_lord_id)},
+            {"$set": updates}
+        )
+        return result.modified_count > 0
+
     async def delete_land_lord(self, land_lord: LandLord):
         return await self.collection.delete_one(land_lord)
 
@@ -61,17 +68,26 @@ class LandLordRepository:
         return await self.collection.find_one(
             {"$or": [{"email": identifier}, {"phone_number": identifier}]}
         )
-
-    async def update_virtual_account_number(self, identifier: str, virtual_account_number: str) -> bool:
+    async def update_virtual_account_number(self, identifier: str, virtual_account_number: str, bank_name: str = "", account_name: str = "") -> bool:
+        update_fields = {"virtual_account_number": virtual_account_number}
+        if bank_name:
+            update_fields["bank_name"] = bank_name
+        if account_name:
+            update_fields["account_name"] = account_name
         result = await self.collection.update_one(
             {"$or": [{"email": identifier}, {"phone_number": identifier}]},
-            {"$set": {"virtual_account_number": virtual_account_number}},
+            {"$set": update_fields},
         )
         return result.matched_count > 0
-
     async def get_virtual_account_number_by_identifier(self, identifier: str):
         land_lord = await self.collection.find_one(
             {"$or": [{"email": identifier}, {"phone_number": identifier}]},
-            {"virtual_account_number": 1},
+            {"virtual_account_number": 1, "bank_name": 1, "account_name": 1},
         )
-        return land_lord.get("virtual_account_number") if land_lord else None
+        if not land_lord:
+            return None
+        return {
+            "virtual_account_number": land_lord.get("virtual_account_number"),
+            "bank_name": land_lord.get("bank_name", ""),
+            "account_name": land_lord.get("account_name", ""),
+        }

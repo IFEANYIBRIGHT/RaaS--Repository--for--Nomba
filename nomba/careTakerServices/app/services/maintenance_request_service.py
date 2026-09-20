@@ -1,6 +1,6 @@
-from datetime import datetime
-from nomba.careTakerServices.app.repository.maintenance_request_repo import MaintenanceRequestRepo
+import datetime
 
+from nomba.careTakerServices.app.repository.maintenance_request_repo import MaintenanceRequestRepo
 
 class MaintenanceRequestService:
     def __init__(self, repo: MaintenanceRequestRepo):
@@ -14,7 +14,7 @@ class MaintenanceRequestService:
             "property_name": property_name,
             "care_taker_id": care_taker_id,
             "status": "Open",
-            "reported_date": datetime.now().strftime("%Y-%m-%d"),
+            "reported_date": datetime.datetime.now().strftime("%Y-%m-%d"),
         }
         return await self.repo.create_request(data)
 

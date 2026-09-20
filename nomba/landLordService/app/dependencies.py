@@ -1,13 +1,13 @@
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from database import get_database
-from app.repository.tenant_repo import TenantsRepo
-from app.repository.land_lord_repository import LandLordRepository
-from app.repository.payment_repo import PaymentRepo
-from app.nomba_client.nomba_client import NombaClient
-from app.services.land_lord_services import LandLordService
-from app.services.payment_services import PaymentService
+from nomba.database import get_database
+from nomba.landLordService.app.repository.tenant_repo import TenantsRepo
+from nomba.landLordService.app.repository.land_lord_repository import LandLordRepository
+from nomba.landLordService.app.repository.payment_repo import PaymentRepo
+from nomba.landLordService.app.nomba_client.nomba_client import NombaClient
+from nomba.landLordService.app.services.land_lord_services import LandLordService
+from nomba.landLordService.app.services.payment_services import PaymentService
 from nomba.careTakerServices.app.repository.care_taker_repo import CareTakerRepo
 
 

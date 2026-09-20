@@ -1,9 +1,9 @@
 from fastapi import Depends, HTTPException, Request
 from fastapi import Request
-from app.router.land_lord_router import router
-from app.dependencies import get_payment_service
-from app.services.payment_services import PaymentService
-from app.webhooks.nomba_verify import verify_signature
+from nomba.landLordService.app.router.land_lord_router import router
+from nomba.landLordService.app.dependencies import get_payment_service
+from nomba.landLordService.app.services.payment_services import PaymentService
+from nomba.landLordService.app.webhooks.nomba_verify import verify_signature
 
 
 @router.post("/webhooks/nomba")

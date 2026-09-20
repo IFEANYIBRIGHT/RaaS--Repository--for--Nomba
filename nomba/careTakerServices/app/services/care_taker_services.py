@@ -2,8 +2,6 @@ from nomba.careTakerServices.app.models.care_taker import CareTaker
 from nomba.careTakerServices.app.repository.care_taker_repo import CareTakerRepo
 from nomba.careTakerServices.app.exception.careTakerNotFoundError import CareTakerNotFoundError
 from nomba.tenantServices.app.utils.security import hash_password, verify_password
-
-
 class CareTakerService:
     def __init__(self, repo: CareTakerRepo):
         self.repo = repo

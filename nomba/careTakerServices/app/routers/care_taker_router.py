@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, HTTPException
-
 from nomba.careTakerServices.app.dependencies import get_care_taker_service
 from nomba.careTakerServices.app.services.care_taker_services import CareTakerService
 from nomba.careTakerServices.app.schemas.login_request import LoginRequest

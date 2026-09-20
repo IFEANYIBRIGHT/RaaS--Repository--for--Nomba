@@ -56,3 +56,15 @@ class TenantsRepo:
             {"$inc": {"balance": -amount}},
         )
         return result.modified_count > 0
+
+    async def update_tenant(self, tenant_id: str, update_data: dict) -> bool:
+        try:
+            oid = ObjectId(tenant_id)
+        except InvalidId:
+            return False
+
+        result = await self.collection.update_one(
+            {"_id": oid},
+            {"$set": update_data},
+        )
+        return result.modified_count > 0

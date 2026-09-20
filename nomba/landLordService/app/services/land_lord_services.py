@@ -44,6 +44,19 @@ class LandLordService:
         }
         return await self.tenants_repo.create_tenant(tenant_data)
 
+    async def update_a_tenant(self, tenant_id: str, update_data: dict) -> bool:
+        if "lease_start" in update_data and update_data["lease_start"]:
+            try:
+                start = datetime.strptime(update_data["lease_start"], "%Y-%m-%d")
+                if start.month == 12:
+                    next_month = start.replace(year=start.year + 1, month=1)
+                else:
+                    next_month = start.replace(month=start.month + 1)
+                update_data["next_due_date"] = next_month.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        return await self.tenants_repo.update_tenant(tenant_id, update_data)
+
     async def add_a_caretaker(self, care_taker: CareTaker):
         care_taker_data = {
             "name": care_taker.name,
@@ -81,8 +94,18 @@ class LandLordService:
     async def get_all_tenants(self):
         return await self.tenants_repo.get_all_tenants()
 
-    async def set_virtual_account_number(self, identifier: str, virtual_account_number: str) -> bool:
-        return await self.land_lord_repository.update_virtual_account_number(identifier, virtual_account_number)
-
+    async def set_virtual_account_number(self, identifier: str, virtual_account_number: str, bank_name: str = "", account_name: str = "") -> bool:
+        return await self.land_lord_repository.update_virtual_account_number(identifier, virtual_account_number, bank_name, account_name)
     async def get_virtual_account_number(self, identifier: str):
         return await self.land_lord_repository.get_virtual_account_number_by_identifier(identifier)
+
+    async def update_property(self, land_lord_id: str, updates: dict) -> dict:
+        clean_updates = {k: v for k, v in updates.items() if v is not None}
+        if "land_use_type" in clean_updates:
+            clean_updates["land_use_type"] = clean_updates["land_use_type"].value
+        if not clean_updates:
+            return {"message": "No changes provided"}
+        updated = await self.land_lord_repository.update_land_lord_property(land_lord_id, clean_updates)
+        if not updated:
+            return {"message": "No changes made"}
+        return {"message": "Property updated successfully"}
